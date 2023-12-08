@@ -1,21 +1,27 @@
+// declares API URL
 const API_URL = "https://fsa-crud-2aa9294fe819.herokuapp.com/api/2309-FTB-ET-WEB-PT/events";
 
+// declares state object with parties array
 let state = {
     parties: []
 }
 
+// stores query selectors of the form and list itself in variables
 const partyList = document.querySelector('#partyList');
 const addPartyForm = document.querySelector('#addParty');
+
+// listens to form and executes addParty upon submit
 addPartyForm.addEventListener("submit", addParty);
 
+// MAIN FUNCTION: gets the parties from the server and renders them onto the page
 async function getAndRender() {
     await getParties();
     renderParties();
   }
   getAndRender();
 
+// gets the parties from the server
 async function getParties() {
-    // TODO
     try {
       const response = await fetch(API_URL);
       const json = await response.json();
@@ -25,6 +31,7 @@ async function getParties() {
     }
 }
 
+// adds new party based on the input on the form
 async function addParty(event) {
     event.preventDefault();
   
@@ -49,6 +56,7 @@ async function addParty(event) {
     }
 }
 
+// deletes party according to which button is pressed
 async function deleteParty(partyId) {
     try {
         const response = await fetch(`${API_URL}/${partyId}`, {
@@ -65,6 +73,7 @@ async function deleteParty(partyId) {
       }
 }
 
+// renders the parties onto the page
 function renderParties() {
     if (!state.parties.length) {
         partyList.innerHTML = "<li>No parties here!</li>";

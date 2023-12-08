@@ -1,9 +1,13 @@
 // declares API URL
 const API_URL = "https://fsa-crud-2aa9294fe819.herokuapp.com/api/2309-FTB-ET-WEB-PT/events";
+const API_URL_Guests = "https://fsa-crud-2aa9294fe819.herokuapp.com/api/2309-FTB-ET-WEB-PT/guests";
+const API_URL_Rsvps = "https://fsa-crud-2aa9294fe819.herokuapp.com/api/2309-FTB-ET-WEB-PT/rsvps";
 
 // declares state object with parties array
 let state = {
-    parties: []
+    parties: [],
+    guests: [],
+    rsvps: []
 }
 
 // stores query selectors of the form and list itself in variables
@@ -31,6 +35,17 @@ async function getParties() {
     }
 }
 
+// gets the guests from the server
+async function getGuests() {
+  try {
+    const response = await fetch(API_URL_Guests);
+    const json = await response.json();
+    state.guests = json.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // adds new party based on the input on the form
 async function addParty(event) {
     event.preventDefault();
@@ -48,6 +63,30 @@ async function addParty(event) {
       
       if (!response.ok) {
         throw new Error("Failed to create party");
+      }
+  
+      getAndRender();
+    } catch (error) {
+      console.error(error);
+    }
+}
+
+// adds new guest based on the input on the form
+async function addGuest(event) {
+    event.preventDefault();
+  
+    try {
+      const response = await fetch(API_URL_Guests, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({  name: addGuestForm.elements["name"].value,
+          email: addGuestForm.elements["email"].value,
+          phone: addGuestForm.elements["phone"].value
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to create guest");
       }
   
       getAndRender();
